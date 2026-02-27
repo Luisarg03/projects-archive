@@ -1,0 +1,61 @@
+{
+    "StartAt": "ParallelExecution",
+    "States": {
+      "ParallelExecution": {
+        "Type": "Parallel",
+        "Branches": [
+          {
+            "StartAt": "lambda_raw_daily",
+            "States": {
+              "lambda_raw_daily": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:${region}:${id_env}:function:lambda_raw_daily",
+                "Parameters": {
+                    "PARAMETERS.$": "$.PARAMETERS",
+                    "BUCKET_DATA.$": "$.BUCKET_DATA",
+                    "DEVMODE.$": "$.DEVMODE"
+                  },
+                "Next": "lambda_cur_daily",
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "Next": "HandleError1"
+                  }
+                ]
+              },
+              "lambda_cur_daily": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:${region}:${id_env}:function:lambda_cur_daily",
+                "Parameters": {
+                    "PARAMETERS.$": "$.PARAMETERS",
+                    "BUCKET_DATA.$": "$.BUCKET_DATA",
+                    "DEVMODE.$": "$.DEVMODE"
+                  },
+                "Next": "ParallelExecutionDone1",
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "Next": "HandleError1"
+                  }
+                ]
+              },
+              "ParallelExecutionDone1": {
+                "Type": "Pass",
+                "End": true
+              },
+              "HandleError1": {
+                "Type": "Pass",
+                "End": true
+              }
+            }
+          }
+        ],
+        "Next": "Done"
+      },
+      "Done": {
+        "Type": "Pass",
+        "End": true
+      }
+    }
+  }
+  

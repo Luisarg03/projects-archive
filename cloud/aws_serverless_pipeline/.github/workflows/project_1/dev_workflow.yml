@@ -1,0 +1,212 @@
+name: Terraform deploy DEV
+
+on:
+  push:
+    branches:
+      - develop
+      - qa
+
+jobs:
+  SonarCloud:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python: ['3.11']
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+
+      - name: List files in the repository
+        run: ls -la
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install tox and any other packages
+        run: pip install tox
+
+      - name: Run tox
+        run: |
+          tox -e py -c ./tox.ini
+
+      - name: SonarCloudScan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+
+  CreateBucketArtifacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: develop
+    env:
+      AWS_REGION: "us-east-1"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_REGION=${{ env.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0
+
+      - name: Check terraform version
+        run: |
+          terraform --version
+
+      - name: Initialize Terraform
+        run: |
+          cd app/iac/artifacts-buckets/
+          ls -l
+          if [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
+            echo "Faltan credenciales de AWS. Asegúrate de haber configurado correctamente las credenciales secretas."
+            exit 1
+          fi
+          terraform init -backend=false || exit 0
+
+      - name: Plan Terraform
+        run: |
+          cd app/iac/artifacts-buckets/
+          terraform plan -var-file=dev.tfvars || exit 0
+
+      - name: Apply Terraform
+        run: |
+          cd app/iac/artifacts-buckets/
+          terraform apply -var-file=dev.tfvars -auto-approve || exit 0
+
+
+  CreateRolesIAM:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: CreateBucketArtifacts
+    environment:
+      name: develop
+    env:
+      AWS_REGION: "us-east-1"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_REGION=${{ env.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0
+
+      - name: Check terraform version
+        run: |
+          terraform --version 
+
+      - name: Initialize Terraform
+        run: |
+          cd app/iac/iam
+          ls -l
+          if [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
+            echo "Faltan credenciales de AWS. Asegúrate de haber configurado correctamente las credenciales secretas."
+            exit 1
+          fi
+          terraform init || exit 1
+
+      - name: Plan Terraform
+        run: |
+          cd app/iac/iam
+          ls -l
+          terraform plan -var-file=dev.tfvars || exit 1
+
+      - name: Apply Terraform
+        run: |
+          cd app/iac/iam
+          terraform apply -var-file=dev.tfvars -auto-approve || exit 1
+
+
+      # ##################
+      # # ONLY DEV ENV ###
+      # ##################
+      # - name: Destoy Terraform
+      #   run: |
+      #     cd app/iac/iam/
+      #     terraform destroy -var-file=dev.tfvars -auto-approve || exit 1
+
+
+  DeployDataPipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: CreateRolesIAM
+    environment:
+      name: develop
+    env:
+      AWS_REGION: "us-east-1"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_REGION=${{ env.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0
+
+      - name: Check terraform version
+        run: |
+          terraform --version
+
+      - name: Set permissions and exec copy_helper_functions.sh
+        run: |
+          cd app/iac/data_pipeline
+          chmod +x copy_helper_functions.sh
+          bash copy_helper_functions.sh
+
+      - name: Initialize Terraform
+        run: |
+          cd app/iac/data_pipeline
+          ls -l
+          if [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
+            echo "Faltan credenciales de AWS. Asegúrate de haber configurado correctamente las credenciales secretas."
+            exit 1
+          fi
+          terraform init || exit 1
+
+      - name: Plan Terraform
+        run: |
+          cd app/iac/data_pipeline
+          ls -l
+          terraform plan -var-file=dev.tfvars || exit 1
+
+      - name: Apply Terraform
+        run: |
+          cd app/iac/data_pipeline
+          ls -l
+          terraform apply -var-file=dev.tfvars -auto-approve || exit 1
+
+
+      ##################
+      # ONLY DEV ENV ###
+      ##################
+      # - name: Destoy Terraform
+      #   run: |
+      #     cd app/iac/data_pipeline
+      #     terraform destroy -var-file=dev.tfvars -auto-approve || exit 1
