@@ -1,0 +1,79 @@
+services:
+    
+    nifi-container1:
+        image: apache/nifi:1.15.0
+        restart: always
+        container_name: nifi-container1
+        ports:
+            - 8181:8181
+        env_file:
+            - .env
+        environment:
+            - NIFI_WEB_HTTP_PORT=8181
+            - AWS_KEY_ID=$AWS_KEY_ID
+            - AWS_KEY_SECRET=$AWS_KEY_SECRET
+        volumes:
+            - ./nifi/nifi_conf:/opt/nifi/nifi-current/conf
+            - ./nifi/nifi_state:/opt/nifi/nifi-current/state
+            - ./nifi/nifi_db:/opt/nifi/nifi-current/database_repository
+            - ./nifi/nifi_flowfile:/opt/nifi/nifi-current/flowfile_repository
+            - ./nifi/nifi_content:/opt/nifi/nifi-current/content_repository
+            - ./nifi/nifi_provenance:/opt/nifi/nifi-current/provenance_repository
+            - ../fileslake:/opt/nifi/nifi-current/fileprocessor
+            - ../fileslake/original:/opt/nifi/nifi-current/fileprocessor/original
+            - ../fileslake/data_cryptocurrencies:/opt/nifi/nifi-current/fileprocessor/data_cryptocurrencies
+            - ../fileslake/error_handler:/opt/nifi/nifi-current/fileprocessor/error_handler
+        command: sudo chmod a+rwx .nifi/*
+    
+    nifi-container2:
+        image: apache/nifi:1.15.0
+        restart: always
+        container_name: nifi-container2
+        ports:
+            - 8182:8182
+        env_file:
+            - .env
+        environment:
+            - NIFI_WEB_HTTP_PORT=8182
+            - AWS_KEY_ID=$AWS_KEY_ID
+            - AWS_KEY_SECRET=$AWS_KEY_SECRET
+        volumes:
+            - ./nifi2/nifi_conf:/opt/nifi/nifi-current/conf
+            - ./nifi2/nifi_state:/opt/nifi/nifi-current/state
+            - ./nifi2/nifi_db:/opt/nifi/nifi-current/database_repository
+            - ./nifi2/nifi_flowfile:/opt/nifi/nifi-current/flowfile_repository
+            - ./nifi2/nifi_content:/opt/nifi/nifi-current/content_repository
+            - ./nifi2/nifi_provenance:/opt/nifi/nifi-current/provenance_repository
+        command: sudo chmod a+rwx .nifi2/*
+        networks:
+            - elastic
+    
+    elastic-container:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.14.2
+        container_name: elastic-container
+        environment:
+            - xpack.security.enabled=false
+            - "discovery.type=single-node"
+        volumes:
+            - ./elastic/data01:/usr/share/elasticsearch/data:ro
+        ports:
+        - 9200:9200
+        networks:
+        - elastic
+    
+    kibana-container:
+        image: docker.elastic.co/kibana/kibana:7.14.2
+        container_name: kibana-container
+        depends_on:
+            - elastic-container
+        ports:
+            - 5601:5601
+        environment:
+            ELASTICSEARCH_URL: http://elastic-container:9200
+            ELASTICSEARCH_HOSTS: '["http://elastic-container:9200"]'
+        networks:
+        - elastic
+    
+networks:
+ elastic:
+    driver: bridge

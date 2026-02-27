@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  db:
+    container_name: pg_container
+    image: postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - APP_DB_USER=docker
+      - APP_DB_PASS=docker
+      - APP_DB_NAME=coderio
+    command: postgres -c work_mem=500MB -c maintenance_work_mem=500MB -c max_wal_size=3GB
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+  script:
+    container_name: script_container
+    restart: on-failure
+    depends_on:
+      - db
+      - pgadmin
+    build: .
+
