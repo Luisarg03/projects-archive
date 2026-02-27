@@ -1,0 +1,32 @@
+# Ignore .csv
+*.csv
+
+# Python
+*.pyc
+__pycache__/
+venv/
+*.env
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Dependency directories
+env/
+lib/
+bin/
+include/
+
+# Compiled files
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.dll
+*.exe
+*.out
+*.egg-info/
+dist/
+build/

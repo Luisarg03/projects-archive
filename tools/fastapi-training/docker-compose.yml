@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  data-loader:
+    build: ./scripts/
+    image: data-dummy:1.0
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=myuser
+      - DATABASE_PASSWORD=mypassword
+      - DATABASE_NAME=mydatabase
+      - DIGEST=4854e434b9cab3ee2e3db738616d59251b70
+      - ROUNDS=15
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  db:
+    build: ./db/
+    image: postgresql-dummy:1.0
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=mydatabase
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+     driver: bridge
