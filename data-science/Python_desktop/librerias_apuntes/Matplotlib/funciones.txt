@@ -1,0 +1,109 @@
+plt.figure("titulo ventana1")
+plt.figure("titulo ventana2")
+
+a=np.random.rand(100) #vectore aleatorios
+b=np.random.rand(100) 
+
+#me posiciones en la ventana1
+plt.figure("titulo ventana2")
+
+plt.scatter(a,b) #dibujamos un scatterplot en la ventana2
+
+#posicion ventana1
+plt.figure("ventana1")
+
+plt.plot(a,b) #dibujo un plot en la ventana1
+
+
+-----------------------------------------------------------------------------------
+
+plt.ion() #modo interactivo activo
+
+#divido la ventana en una fila, dos columnas
+plt.subplot(1,2,1) #row, column, index
+
+--------------------------------------------------------------------------------------
+
+plt.suptitle("titulo del grafico")
+
+plt.plot((1,2,3,4), label="etiqueta de esta linea")
+
+plt.legend(loc=2) #leyenad en la esquina superior
+
+plt.rc("lines",linewidth=2) #todas las lineas con ancho doble
+
+plt.rc("font" , size=18) #fuente tamaño 18
+
+--------------------------------------------------------------------------------------------
+
+plt.axes()    #llama y configura un area de grafico con valores por defecto
+plt.plot(np.exp(np.linspace(0,10,100)))  #exponencial de 0 a 10
+
+	   x   y   width height
+plt.axes([0.2, 0.5, 0.3, 0.3]) #dibuja una nuefva area grafica con ancho y largo especificado por []
+
+plt.plot(np.sin(np.linspace(0,10,100)), linewidth=2)
+
+plt.cla() # borra el contenido dentro del grafico de axes
+plt.delaxes() # borra el axes del grafico
+
+plt.grid()  #rejillas en el grafico, para identificar areas
+
+-------------------------------------------------------------------------------------------
+
+plt.axis()
+
+#configuracion de ejes
+
+plt.xlim() plt.xscale()
+
+plt.ylim()  plt.yscale()
+
+plt.semilogx() / plt.semilogy()   #dejar los ejes con escala logaritmica
+
+plt.twinx() / plt.twiny    #dibujar un segundo eje x o y
+
+plt.margins()   # establecer margenes alrededor de los limites de los ejes
+
+plt.xlabel()  plt.ylabel()   #etiquetar a los ejes
+
+---------------------------------------------------------------------------------------------------
+
+#resaltar zonas del grafico
+
+plt.axvline() y plt.axhline() # dibujan lineas 
+
+plt.axvspan y plt.axhspan # dibujan recuadros entre las cordenadas y o x que especifiquemos
+
+
+plt.axvspan(-0.5,0.5, alpha = 0.25) # recuadro entre x[-0.5,0.5] con transparencia 0.25
+
+-------------------------------------------------------------------------------------------
+
+controlar textos basicos
+
+plt.legend()
+
+plt.title()  # titulo al grafico
+
+plt.suptitle()
+
+plt.xlabel y .ylabel # para los ejes 
+
+
+
+plt.minorticks_on()  # activamos que se vean las rayitas de subdivision de los ejes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
