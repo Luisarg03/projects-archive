@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+<html lang="en">
+    
+    {% block content %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Pais</th>
+                    <th scope="col">Casos</th>
+                    <th scope="col">Muertes</th>
+                    <th scope="col">Recuperados</th>
+                    <th scope="col">Rate muerte</th>
+                    <th scope="col">Rate recuperación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in tables %}
+                <tr>
+                {% for value in row %}
+                <td scope="row">{{ value }}</td>
+                {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}
+
+</html>

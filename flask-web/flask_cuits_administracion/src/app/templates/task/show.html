@@ -1,0 +1,36 @@
+{% extends 'layaout.html' %}
+
+{% block container %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card border">
+                    <table class="table">
+                        <thead class="thead-dark">
+                          <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">CUIT</th>
+                            <th scope="col">Correo</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{{user.user}}</td>
+                            <td>{{user.name2}}</td>
+                            <td>{{user.cuit}}</td>
+                            <td>{{user.email}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
+                </div>
+                
+            </div>    
+        </div>
+        <a href="{{ url_for('.index') }}" class="btn btn-outline-secondary mt-4">
+            Nueva busqueda
+        </a>
+    </div>
+    
+{% endblock %}

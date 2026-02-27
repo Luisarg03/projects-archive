@@ -1,0 +1,67 @@
+{% extends 'layaout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+
+{% block container %}
+    <div class="container text-white">
+        <div class="row">
+            <div class="col-lg"></div>
+            <div class="col bg-dark p-5">
+                <div id='login' class="" style="">
+                <h4>Registro de nuevo CUIT</h4>
+                <br>
+                <form method="POST">
+                    <input type='hidden' name='csrf_token'
+                    value="{{csrf_token()}}">
+                    
+                    <div class="form-group">
+                        <div>
+                            {{ render_field(form.user, required=False, class='form-control text-center', placeholder='Tu nombre') }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                            {{ render_field(form.name2, required=False, class='form-control text-center', placeholder='Tu apellido') }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                            {{ render_field(form.email, required=False, class='form-control text-center', placeholder='Nuevo correo electronico') }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                            {{ render_field(form.cuit, required=False, class='form-control text-center', placeholder='Nueva CUIT') }}
+                        </div>
+                        <small id="emailHelp" class="form-text text-muted">Ej.: 23000000009</small>
+                    </div>
+
+                    <div class="mx-auto" style="width: 70%">
+                        <div class="custom-control custom-checkbox">
+                            {{form.accept(class_='custom-control-input', type="checkbox", id="customCheck1")}}
+                            <label class="custom-control-label" for="customCheck1">
+                                Acepto los términos y condiciones
+                            </label>
+                        </div>                     
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-outline-success">
+                        <h6>Registrar</h6>
+                    </button>
+                </form>
+            </div>
+            </div>
+            <div class="col-lg"></div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <hr>
+            </div>
+        </div>
+    </div>
+            
+
+{% endblock %}

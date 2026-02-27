@@ -1,0 +1,6 @@
+.sticky-top-2 {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 500px;
+    z-index: 1020;
+  }

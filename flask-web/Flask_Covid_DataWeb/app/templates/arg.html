@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+<html lang="en">
+    {% block content %}
+        <img src="../static/img/arg.png" class="mx-auto d-block" width="100%">
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Media Casos al dia</th>
+                        <th scope="col">Media muertes al dia</th>
+                        <th scope="col">Media recuperados al dia</th>
+                        <th scope="col">Media Casos al mes</th>
+                        <th scope="col">Media muertes al mes</th>
+                        <th scope="col">Media recuperados al mes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    {% for row in dato %}
+                    <td scope="row"><h3>{{ row }}</h3></td>
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    {% endblock %}
+</html>

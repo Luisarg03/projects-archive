@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from 'helpers/_forms.html' import render_field %}
+
+    {% block content %}
+      <form method="POST">
+
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">FROM</label>
+            <label class="input-group-text" for="inputGroupSelect01">{{index}}</label>
+        </div>
+      
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">select MESAGGE field</label>
+        <select class="form-select" id="inputGroupSelect01" name="field_select_message">
+            {% for col in columns %}
+                <option class="dropdown-item" value="{{col}}">{{col}}</option>
+            {% endfor %}
+        </select>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect02">select DATE field</label>
+        <select class="form-select" id="inputGroupSelect02" name="field_select_date">
+            {% for col in columns %}
+                <option class="dropdown-item" value="{{col}}">{{col}}</option>
+            {% endfor %}
+        </select>
+      </div>
+
+      <hr class="border border-3 border-primary">
+      
+      <div class="input-group mb-3">
+        <h3 class="input-group-text">TO</h3>
+      </div>
+
+      <div class="input-group mb-3">
+        <h3 class="input-group-text">INDEX</h3>
+        {{ render_field(form.index, required=False, class='form-control', id='inputGroupSelect01', placeholder='Nombre de indice') }}
+      </div>
+
+      <div class="input-group mb-3">
+        <h3 class="input-group-text">HOST</h3>
+        {{ render_field(form.host, required=False, class='form-control', id='inputGroupSelect01', placeholder='Nombre de servidor') }}
+      </div>
+
+      <div class="input-group mb-3">
+        <h3 class="input-group-text">USER</h3>
+        {{ render_field(form.user, required=False, class='form-control', id='inputGroupSelect01', placeholder='Usuario de servidor') }}
+      </div>
+
+      <div class="input-group mb-3">
+        <h3 class="input-group-text">KEY</h3>
+        {{ render_field(form.key, required=False, class='form-control', id='inputGroupSelect01', placeholder='Clave de servidor') }}
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary" name="submit_button" value="return">return</button>
+        <button type="submit" class="btn btn-success" name="submit_button" value="confirm">Confirm</button>
+      </div>
+    </form>
+    {% endblock %}
