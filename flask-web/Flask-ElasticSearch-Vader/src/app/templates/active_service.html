@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from 'helpers/_forms.html' import render_field %}
+
+    {% block content %}
+        
+    <h3 class="">Services active</h3>
+    <hr class="border border-3 border-primary">
+        <div class="row text-center">
+            
+            <div class="col">
+                <label class="input-group-text" for="inputGroupSelect01">FROM: </label>
+            </div>
+
+            <div class="col p-2">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    aria-valuenow="100"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    style="width: 100%">Connect</div>
+                </div>
+            </div>
+
+            <div class="col">
+                <label class="input-group-text" for="inputGroupSelect01">TO: </label>
+            </div>
+
+            <form method="POST" onsubmit="submit_button.disabled = true; return true;">
+                <button type="submit" class="btn btn-success" name="submit_button" value="send">Activate</button>
+            </form>
+        </div>
+
+
+      
+            <!-- <script type = "text/JavaScript">
+               <!--
+                  function AutoRefresh( t ) {
+                     setTimeout("location.reload(true);", t);
+                  }
+            </script>
+            
+         
+         <body onload = "JavaScript:AutoRefresh(9000);">
+            <p>This page will refresh every 9 seconds.</p>
+         </body> -->
+    {% endblock %}

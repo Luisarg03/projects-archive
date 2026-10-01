@@ -1,0 +1,42 @@
+{% extends 'layaout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+
+{% block container %}
+    <div id='login' class="container mt-5">
+
+        <div class="row">
+
+            <div class="col-md"></div>
+
+            <div class="col-md-6 bg-dark p-5 text-white">
+                <h3 class="font-weight-bold">Edita tu nota</h3>
+                <br>
+
+                <form method="POST">
+                    <input type='hidden' name='csrf_token'
+                    value="{{csrf_token()}}">
+                                
+                    <div class="mb-3">
+                        {{ render_field(form.title, required=False, class='form-control text-center', placeholder='Titulo de la nota') }}
+                    </div>
+                                
+                    <div>
+                        {{ render_field(form.description, required=False, class='form-control text-center', placeholder='Nueva nota') }}
+                    </div>
+
+                    <small id="emailHelp" class="form-text text-muted">La nota debe contener un minimo de 4 caracteres.</small>
+                    <br>
+
+                    <button type="submit" class="btn btn-outline-primary">
+                        <h6 class="font-weight-bold">Editar nota</h6>
+                    </button>
+
+                </form>
+            </div>
+
+            <div class="col-md"></div>
+
+        </div> 
+
+    </div>
+{% endblock %}

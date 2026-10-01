@@ -1,0 +1,90 @@
+{% extends 'layaout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+        {% block title %}
+            {{ title }}
+        {% endblock %}
+    </head>
+{% block container %}
+
+    <div class="container mt-5 bg-dark">
+
+        <div class="row">
+
+            <div class="col mb-5 p-3">
+                <div class="text-center text-primary" id="hola">
+                    <h2 class="font-weight-bold">Python Flask</h2>
+                    <h3 class="font-weight-bold">Un simple anotador</h3>
+                </div>
+                <div class="">
+                    <img class="rounded float-center p-2" src="{{url_for('static', filename='img/anotador.png')}}" alt="" style="width: 50%">
+                </div>
+            </div>
+
+            <div class="col-md bg-light text-dark p-3">
+
+            {% if current_user.is_authenticated %}
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <a href="{{url_for('.tasks')}}">
+                                <button class="btn btn-outline-success">
+                                   <h3 class="font-weight-bold">Ver mis notas</h3> 
+                                </button> 
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col">
+                            <img src="{{url_for('static', filename='img/ok.jpg')}}" alt="" style="width: 40%">
+                        </div>
+                    </div>
+                </div>    
+
+            {% else %}
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <h3>Inicia sesión</h3>
+
+                            <form method="POST">
+                                <input type='hidden' name='csrf_token'
+                                value="{{csrf_token()}}">
+                            
+                                <div>           
+                                    <div class="col-8 mx-auto">
+                                        {{ render_field(form.username, required=False, class='form-control text-center', placeholder='Ingresá usuario') }}
+                                    </div> 
+                                    
+                                    <div class="col-8 mx-auto">
+                                        {{ render_field(form.password, required=False, class='form-control text-center', placeholder='Ingresá clave') }}             
+                                    </div>
+                                </div> 
+
+                                <small id="emailHelp" class="form-text text-muted">No Compartas tus contraseñas con nadie.</small>
+                                <br>
+                                <button type="submit" class="btn btn-outline-primary">
+                                <h6>Acceder</h6>
+                                </button>
+                            </form>
+                            <div class="row mt-2"><a href="{{url_for('.register')}}" class="btn btn-success mx-auto">Registro</a></div>
+                        </div>
+                    </div>
+                </div>
+                     
+            {% endif %}
+
+            </div> 
+
+        </div>
+
+    </div>    
+{% endblock %}
+
+    
