@@ -1,0 +1,13 @@
+{
+    "name": "event-rule-sm-project",
+    "state_machine": "sm-project",
+    "description": "Operation TEST. Rule that triggers the Step Function every day at 07:00 am",
+    "schedule_expression": "cron(00 11 * * ? *)",
+    "PARAMETERS": {
+        "OPERATION": "TEST",
+        "TABLE": "TEST"
+    },
+    "BUCKET_DATA": "",
+    "BUCKET_ARTIFACT": "",
+    "DEVMODE": ""
+}
