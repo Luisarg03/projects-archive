@@ -1,0 +1,19 @@
+Tipos de graficos.
+
+plt.plot()  # graficos lineas
+
+plt.plot_date()  #similar a plot, pero considera uno o los dos ejes como fechas
+
+plt.plotfile()  #dibuja directamente desde los datos de un fichero .... ?¡?
+
+
+--------------------------------------------------------------------------
+
+histograma. (grafico de barra)
+
+plt.hist()  ---- grafica la frecuencia de datos en intervalos(bins) definidos.
+
+
+
+
+
