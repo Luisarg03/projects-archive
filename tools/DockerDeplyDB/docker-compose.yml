@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  SQLServer:
+    image: microsoft/mssql-server-windows-developer
+    container_name: SQLServer_DB
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password_01
+      - attach_dbs=[{'dbName':'DB','dbFiles':['C:\\SQLData\\DB.mdf','C:\\SQLData\\DB_log.ldf']}]
+    ports:
+      - '1433:1433'
+    volumes:
+      - C:\Docker\DockerDeplyDB\SQLServerDB\volume:C:\SQLData

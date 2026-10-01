@@ -1,0 +1,10 @@
+{
+    "pokemon": {
+        "name": "pokemon_tcg_data_master",
+        "link": "https://www.kaggle.com/datasets/adampq/pokemon-tcg-all-cards-1999-2023/download?datasetVersionNumber=1"
+    },
+    "gemini_train_essay": {
+        "name": "train_essays_v1",
+        "link": "https://www.kaggle.com/datasets/etiennekaiser/gemini-pro-llm-daigt-dataset/download?datasetVersionNumber=1"
+    }
+}
